@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.TaskDetailPage"
+             Title="Редактирование задачи">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <Entry Placeholder="Название задачи" Text="{Binding Task.Title}" FontSize="18" />
+
+            <Editor Placeholder="Описание" Text="{Binding Task.Description}" HeightRequest="100" />
+
+            <Entry Placeholder="Проект" Text="{Binding Task.Project}" />
+            <Entry Placeholder="Исполнитель (Owner)" Text="{Binding Task.Owner}" />
+
+            <Picker Title="Приоритет" SelectedItem="{Binding Task.Priority}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Low</x:String>
+                        <x:String>Medium</x:String>
+                        <x:String>High</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Picker Title="Статус" SelectedItem="{Binding Task.Status}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Не начата</x:String>
+                        <x:String>В процессе</x:String>
+                        <x:String>Выполнена</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <DatePicker Date="{Binding TaskDate}" />
+
+            <!-- Выбор категории -->
+            <Label Text="Категория:" FontAttributes="Bold"/>
+            <Picker Title="Выберите категорию" 
+                    ItemsSource="{Binding Categories}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedCategory}" />
+
+            <Button Text="Сохранить" Clicked="OnSaveClicked" BackgroundColor="#2196F3" TextColor="White"/>
+            <Button Text="Удалить" Clicked="OnDeleteClicked" IsVisible="{Binding IsExisting}" BackgroundColor="#ff5757" TextColor="White"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

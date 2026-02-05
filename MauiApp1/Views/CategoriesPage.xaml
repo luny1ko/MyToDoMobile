@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.CategoriesPage"
+             Title="Категории">
+
+    <Grid RowDefinitions="*, Auto" Padding="10">
+        <!-- Список категорий -->
+        <CollectionView x:Name="catsCollection">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="15" BackgroundColor="White" BorderColor="#E0E0E0">
+                        <Grid ColumnDefinitions="30, *, Auto">
+                            <!-- Кружочек с цветом -->
+                            <BoxView Color="{Binding Color}" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
+
+                            <!-- Название -->
+                            <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" Margin="10,0" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+
+                            <!-- Кнопка удаления -->
+                            <Button Grid.Column="2" Text="🗑" 
+                                    BackgroundColor="Transparent" TextColor="Red"
+                                    Clicked="OnDeleteClicked" CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!--Кнопка добавления-->
+        <Button Grid.Row="1" Text="+ Новая категория" 
+                Clicked="OnAddClicked" 
+                BackgroundColor="#F6C91F" TextColor="Black" FontAttributes="Bold" 
+                Margin="0,10"/>
+    </Grid>
+</ContentPage>
