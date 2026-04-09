@@ -9,7 +9,7 @@
 
 ### 1. Выбор пиццы
 На главном экране представлен широкий ассортимент пицц. Каждая карточка содержит изображение, описание и базовую цену.
-![Главный экран]![Uploading image.png…]()
+<img width="1916" height="1074" alt="image" src="https://github.com/user-attachments/assets/afb53a4f-0712-4ca0-bf14-033c2047d94d" />
 
 
 ### 2. Конструктор заказа
@@ -17,11 +17,13 @@
 * Выбрать размер (Маленькая/Средняя/Большая).
 * Добавить дополнительные ингредиенты (цена обновится мгновенно).
 * Указать количество штук.
-![Конструктор](./screenshots/constructor.png)
+<img width="551" height="751" alt="image" src="https://github.com/user-attachments/assets/5b272323-416c-4178-a2a2-4da85090e6e5" />
 
 ### 3. Корзина и история
 После добавления товара он попадает в корзину. При нажатии «Оформить заказ» данные сохраняются в локальный JSON-файл и отображаются в истории.
-![Корзина](./screenshots/cart.png)
+<img width="887" height="987" alt="image" src="https://github.com/user-attachments/assets/885ecceb-30ae-4565-8ed1-222bc7623192" />
+<img width="556" height="746" alt="image" src="https://github.com/user-attachments/assets/ae57374d-26f6-418a-8bdd-267adc543bab" />
+![Uploading image.png…]()
 
 ---
 
