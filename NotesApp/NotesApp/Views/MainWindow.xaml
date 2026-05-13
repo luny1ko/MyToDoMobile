@@ -1,0 +1,183 @@
+﻿<Window x:Class="NotesApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Управление проектами" Height="700" Width="1100" WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- 1. Левое меню -->
+            <ColumnDefinition Width="220"/>
+            <!-- 2. Дерево задач -->
+            <ColumnDefinition Width="300"/>
+            <!-- 3. Редактор -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ================= 1. ЛЕВАЯ ПАНЕЛЬ ================= -->
+        <Border Grid.Column="0" Background="#1E1E2D">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="20,40,20,20">
+                    <materialDesign:PackIcon Kind="AccountCircleOutline" Width="64" Height="64" Foreground="White" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Мазанов И.А." Foreground="White" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <ListBox Grid.Row="1" Background="Transparent" Foreground="White" Margin="10,0" BorderThickness="0">
+                    <ListBoxItem Padding="10" Margin="0,5">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FolderOutline" Width="20" Height="20" Margin="0,0,15,0"/>
+                            <TextBlock Text="Мои проекты"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem Padding="10" Margin="0,5">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CogOutline" Width="20" Height="20" Margin="0,0,15,0"/>
+                            <TextBlock Text="Настройки"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+                <Button Grid.Row="2" Margin="20,20,20,30" Style="{StaticResource MaterialDesignOutlinedButton}" Foreground="White" BorderBrush="White" Command="{Binding LogoutCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Logout" Margin="0,0,10,0"/>
+                        <TextBlock Text="Выход"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- ================= 2. ЦЕНТРАЛЬНАЯ ПАНЕЛЬ ================= -->
+        <Border Grid.Column="1" Background="{DynamicResource MaterialDesignCardBackground}" BorderThickness="0,0,1,0" BorderBrush="#E0E0E0">
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Поиск -->
+                <!-- Поиск -->
+                <TextBox Grid.Row="0" 
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                     materialDesign:HintAssist.Hint="Поиск... (Enter для результата)" 
+                     Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
+                     materialDesign:TextFieldAssist.HasTrailingIcon="True"
+                     materialDesign:TextFieldAssist.TrailingIcon="Magnify">
+                    <TextBox.InputBindings>
+                        <!-- Теперь при нажатии Enter команда Search точно увидит актуальный текст -->
+                        <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <TreeView Grid.Row="1" Margin="0,15,0,0" ItemsSource="{Binding Projects}" BorderThickness="0"
+                           SelectedItemChanged="TreeView_SelectedItemChanged"
+                           PreviewMouseRightButtonDown="Tree_PreviewMouseRightButtonDown">
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Добавить проект" Command="{Binding AddProjectCommand}">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="FolderPlus" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Добавить задачу" Command="{Binding AddTaskCommand}">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="FilePlus" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="Удалить" Command="{Binding DeleteCommand}" Foreground="Red">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Delete" Foreground="Red" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <!-- Шаблон для проектов -->
+                        <HierarchicalDataTemplate ItemsSource="{Binding Tasks}">
+                            <StackPanel Orientation="Horizontal" Margin="0,4">
+                                <materialDesign:PackIcon Kind="Folder" Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,8,0"/>
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                            </StackPanel>
+
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <!-- Шаблон для задач -->
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <materialDesign:PackIcon Kind="FileDocumentOutline" Foreground="Gray" Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding Title}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </Grid>
+        </Border>
+
+        <!-- ================= 3. ПРАВАЯ ПАНЕЛЬ (Редактор) ================= -->
+        <Grid Grid.Column="2" Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Шапка -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock Text="Добро пожаловать!" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="УДАЛИТЬ" Foreground="Red" Margin="0,0,10,0" Command="{Binding DeleteCommand}"/>
+                    <Button Content="СОХРАНИТЬ" Click="BtnSave_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Панель форматирования -->
+            <materialDesign:Card Grid.Row="1" Padding="5" Margin="0,0,0,15" UniformCornerRadius="8">
+                <ToolBarTray Background="Transparent">
+                    <ToolBar Style="{DynamicResource MaterialDesignToolBar}" Background="Transparent">
+                        <Button ToolTip="Жирный">
+                            <materialDesign:PackIcon Kind="FormatBold"/>
+                        </Button>
+                        <Button ToolTip="Курсив">
+                            <materialDesign:PackIcon Kind="FormatItalic"/>
+                        </Button>
+                        <Button ToolTip="Подчеркнутый">
+                            <materialDesign:PackIcon Kind="FormatUnderline"/>
+                        </Button>
+                        <Separator/>
+                        <Button ToolTip="Маркированный список">
+                            <materialDesign:PackIcon Kind="FormatListBulleted"/>
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+            </materialDesign:Card>
+
+            <!-- Редактор текста -->
+            <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="10">
+                <RichTextBox x:Name="TextEditor" BorderThickness="0" FontSize="16" Background="Transparent" SpellCheck.IsEnabled="False">
+                    <FlowDocument>
+                        <Paragraph>Выберите задачу слева, чтобы начать работу...</Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
